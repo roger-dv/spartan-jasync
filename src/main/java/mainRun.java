@@ -1,3 +1,8 @@
+/*
+ * Copyright July 2017
+ * Author: Roger D. Voss
+ * MIT License
+ */
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;

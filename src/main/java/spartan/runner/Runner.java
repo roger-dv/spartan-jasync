@@ -1,3 +1,8 @@
+/*
+ * Copyright July 2017
+ * Author: Roger D. Voss
+ * MIT License
+ */
 package spartan.runner;
 
 import java.util.Spliterator;
