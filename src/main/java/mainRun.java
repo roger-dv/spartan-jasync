@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import spartan.runner.Runner;
 import spartan.runner.Runner.Iterator;
 
+@SuppressWarnings({"CodeBlock2Expr", "RedundantThrows"})
 public class mainRun {
   private static final long programStartTime = System.currentTimeMillis();
   private static final String clsName = mainRun.class.getSimpleName();
@@ -26,7 +27,7 @@ public class mainRun {
 
     System.out.printf("%s: Generate Fibonacci Sequence values%n", clsName);
 
-    final double ceiling = args.length > 0 ? Double.parseDouble(args[0]) : 30 /* default */;
+    final double ceiling = Double.parseDouble(args[0]);
     final String op = args.length > 1 ? args[1] : "stream-all" /* default */;
     final AtomicInteger yieldCallCount = new AtomicInteger();
     final long calculationStartTime = System.currentTimeMillis();
@@ -39,17 +40,14 @@ public class mainRun {
         double j = 0, i = 1;
         yield.accept(j);
         count++;
-        if (maxCeiling <= j) return;
-        yield.accept(i);
-        count++;
-        if (maxCeiling == i) return;
-        for(;;) {
-          double tmp = i;
-          i += j;
-          j = tmp;
-          if (i > maxCeiling) break;
-          yield.accept(i);
-          count++;
+        if (maxCeiling > j) {
+          do {
+            yield.accept(i);
+            count++;
+            double tmp = i;
+            i += j;
+            j = tmp;
+          } while (i <= maxCeiling);
         }
         yieldCallCount.set(count);
       })
@@ -114,18 +112,18 @@ public class mainRun {
       System.exit(1);
     }
 
-    final Long calcDiffTime = Long.valueOf(System.currentTimeMillis() - calculationStartTime);
+    final long calcDiffTime = System.currentTimeMillis() - calculationStartTime;
 
     results.forEach(System.out::println);
     System.out.printf("%d values returned%n", results.size());
     System.out.printf("%d yield() call count%n", yieldCallCount.get());
 
     System.out.printf("%s: Generate Fibonacci Sequence runtime duration (milliseconds): %.0f%n",
-        clsName, calcDiffTime.doubleValue());
+        clsName, (double) calcDiffTime);
 
-    final Long totalDiffTime = Long.valueOf(System.currentTimeMillis() - programStartTime);
+    final long totalDiffTime = System.currentTimeMillis() - programStartTime;
     System.out.printf("%s: Program total runtime duration (seconds): %.3f%n",
-        clsName, totalDiffTime.doubleValue() / 1000d);
+        clsName, (double) totalDiffTime / 1000d);
   }
 
   private static void usage(java.io.PrintStream out) {

@@ -89,22 +89,20 @@ In typical JavaScript implementations, a `Promise` would be returned (similar to
 **spartan-jasync** will draw inspiration from the `runner` utility concept as a way to proceed to implement asynchronous generators for Java. Here is what a Java implementation looks like. The example generator produces the Fibonacci Sequence. It stops when it has generated a value that exceeds a specified ceiling:
 
 ```Java
-final double ceiling = 200;
+final double ceiling = 10000;
 
 final Iterator<Double> iter = Runner.<Double>
   run((yield) -> {
     final double maxCeiling = ceiling;
     double j = 0, i = 1;
     yield.accept(j);
-    if (maxCeiling <= j) return;
-    yield.accept(i);
-    if (maxCeiling == i) return;
-    for(;;) {
-      double tmp = i;
-      i += j;
-      j = tmp;
-      if (i > maxCeiling) break;
-      yield.accept(i);
+    if (maxCeiling > j) {
+      do {
+        yield.accept(i);
+        double tmp = i;
+        i += j;
+        j = tmp;
+      } while (i <= maxCeiling);
     }
   })
   .then(() -> {
